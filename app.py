@@ -14,10 +14,9 @@ def load_lottie_url(url):
 heart_animation = load_lottie_url("https://assets1.lottiefiles.com/packages/lf20_4kx2q32n.json")
 
 # Load model & assets
-model = pkl.load(open('KNN_heart.pkl', 'rb'))
-scaler = pkl.load(open('scaler.pkl', 'rb'))
-expected_columns = pkl.load(open('columns.pkl', 'rb'))
-
+model = joblib.load('KNN_heart.pkl')
+scaler = joblib.load('scaler.pkl')
+expected_columns = joblib.load('columns.pkl')
 # App title
 st.set_page_config(page_title="Heart Stroke Predictor", page_icon="❤️", layout="centered")
 
@@ -76,3 +75,4 @@ if st.button("🔍 Predict", use_container_width=True):
         st.error("⚠️ High Risk of Heart Disease - Consult a doctor immediately.")
     else:
         st.success("✅ Low Risk of Heart Disease - Keep up the healthy lifestyle!")
+
