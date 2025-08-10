@@ -17,7 +17,7 @@ CardioGuard is an AI-powered Streamlit app that predicts heart disease risk usin
 
 ## 📦 Installation
 ```bash
-git clone https://github.com/YOUR_USERNAME/CardioGuard.git
+git clone https://github.com/Alishan45/CardioGuard.git
 cd CardioGuard
 pip install -r requirements.txt
 streamlit run app.py
