@@ -3,6 +3,7 @@ import pandas as pd
 import joblib 
 from streamlit_lottie import st_lottie
 import requests
+from sklearn.neighbors import KNeighborsClassifier
 
 # Load Lottie animation
 def load_lottie_url(url):
@@ -78,6 +79,7 @@ if st.button("🔍 Predict", use_container_width=True):
         st.error("⚠️ High Risk of Heart Disease - Consult a doctor immediately.")
     else:
         st.success("✅ Low Risk of Heart Disease - Keep up the healthy lifestyle!")
+
 
 
 
