@@ -1,8 +1,8 @@
-# Core dependencies
-streamlit==1.38.0
+streamlit
+streamlit-lottie
 pandas==2.2.3
 joblib==1.5.1
 scikit-learn==1.2.2
-streamlit-lottie
+numpy
 
 
