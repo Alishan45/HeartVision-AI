@@ -1,50 +1,53 @@
 import streamlit as st
 import pandas as pd
 import joblib as pkl
+from streamlit_lottie import st_lottie
+import requests
 
+# Load Lottie animation
+def load_lottie_url(url):
+    r = requests.get(url)
+    if r.status_code != 200:
+        return None
+    return r.json()
 
-model = pkl.load('KNN_heart.pkl')
-Scaler = pkl.load('scaler.pkl')
-expected_columns = pkl.load('columns.pkl')
+heart_animation = load_lottie_url("https://assets1.lottiefiles.com/packages/lf20_4kx2q32n.json")
 
-st.title('Heart Stroke Prediction App')
-st.write('This app predicts the likelihood of a heart stroke based on user input data.')
-st.markdown('''
-### Instructions:
-1. Fill in the required fields below.
-2. Click on the "Predict" button to get the prediction.
-''')
+# Load model & assets
+model = pkl.load(open('KNN_heart.pkl', 'rb'))
+scaler = pkl.load(open('scaler.pkl', 'rb'))
+expected_columns = pkl.load(open('columns.pkl', 'rb'))
 
-st.sidebar.header('User Input Features')
-st.sidebar.markdown('Please enter the following details:')
-st.sidebar.markdown('''
-- Age: Your age in years.
-- Hypertension: 1 if you have hypertension, 0 otherwise.
-- Heart Disease: 1 if you have heart disease, 0 otherwise.
-- Marital Status: 1 if married, 0 otherwise.
-- Work Type: 0 for never worked, 1 for private, 2 for self-employed, 3 for government job, 4 for children.
-- Residence Type: 0 for rural, 1 for urban.
-- Average Glucose Level: Your average glucose level.
-- Body Mass Index (BMI): Your body mass index.
-- Smoking Status: 0 for never smoked, 1 for formerly smoked, 2 for currently smoking.
-''')
+# App title
+st.set_page_config(page_title="Heart Stroke Predictor", page_icon="❤️", layout="centered")
 
-age = st.slider("Age", 18, 100, 30)
-sex = st.selectbox("Sex", ["M", "F"])
-chest_pain = st.selectbox("Chest Pain Type", ["ATA", "NAP", "TA", "ASY"])
-resting_bp = st.number_input("Resting Blood Pressure (mm Hg)", 80, 200, 120)
-cholesterol = st.number_input("Cholesterol (mg/dL)", 100, 600, 200)
-fasting_bs = st.selectbox("Fasting Blood Sugar > 120 mg/dL", [0, 1])
-resting_ecg = st.selectbox("Resting ECG", ["Normal", "ST", "LVH"])
-max_hr = st.slider("Max Heart Rate", 60, 220, 150)
-exercise_angina = st.selectbox("Exercise-Induced Angina", ["Y", "N"])
-oldpeak = st.slider("Oldpeak (ST Depression)", 0.0, 6.0, 1.0)
-st_slope = st.selectbox("ST Slope", ["Up", "Flat", "Down"])
+st.markdown("<h1 style='text-align: center; color: #FF4B4B;'>❤️ Heart Stroke Prediction App</h1>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center;'>Predict the likelihood of a heart stroke using your health data</p>", unsafe_allow_html=True)
 
-# When Predict is clicked
-if st.button("Predict"):
+# Animation
+st_lottie(heart_animation, height=200)
 
-    # Create a raw input dictionary
+st.sidebar.header('🩺 Input Your Health Data')
+
+col1, col2 = st.columns(2)
+
+with col1:
+    age = st.slider("Age", 18, 100, 30)
+    sex = st.selectbox("Sex", ["M", "F"])
+    chest_pain = st.selectbox("Chest Pain Type", ["ATA", "NAP", "TA", "ASY"])
+    resting_bp = st.number_input("Resting Blood Pressure (mm Hg)", 80, 200, 120)
+    cholesterol = st.number_input("Cholesterol (mg/dL)", 100, 600, 200)
+    fasting_bs = st.selectbox("Fasting Blood Sugar > 120 mg/dL", [0, 1])
+
+with col2:
+    resting_ecg = st.selectbox("Resting ECG", ["Normal", "ST", "LVH"])
+    max_hr = st.slider("Max Heart Rate", 60, 220, 150)
+    exercise_angina = st.selectbox("Exercise-Induced Angina", ["Y", "N"])
+    oldpeak = st.slider("Oldpeak (ST Depression)", 0.0, 6.0, 1.0)
+    st_slope = st.selectbox("ST Slope", ["Up", "Flat", "Down"])
+
+if st.button("🔍 Predict", use_container_width=True):
+
     raw_input = {
         'Age': age,
         'RestingBP': resting_bp,
@@ -59,25 +62,17 @@ if st.button("Predict"):
         'ST_Slope_' + st_slope: 1
     }
 
-    # Create input dataframe
     input_df = pd.DataFrame([raw_input])
 
-    # Fill in missing columns with 0s
     for col in expected_columns:
         if col not in input_df.columns:
             input_df[col] = 0
 
-    # Reorder columns
     input_df = input_df[expected_columns]
-
-    # Scale the input
     scaled_input = scaler.transform(input_df)
-
-    # Make prediction
     prediction = model.predict(scaled_input)[0]
 
-    # Show result
     if prediction == 1:
-        st.error("⚠️ High Risk of Heart Disease")
+        st.error("⚠️ High Risk of Heart Disease - Consult a doctor immediately.")
     else:
-        st.success("✅ Low Risk of Heart Disease")
+        st.success("✅ Low Risk of Heart Disease - Keep up the healthy lifestyle!")
