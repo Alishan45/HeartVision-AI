@@ -13,7 +13,7 @@ CardioGuard is an AI-powered Streamlit app that predicts heart disease risk usin
 - 📊 Real-time result display
 
 ## 🖥 Demo
-[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](YOUR_STREAMLIT_APP_LINK)
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://heartvision-ai.streamlit.app/)
 
 ## 📦 Installation
 ```bash
